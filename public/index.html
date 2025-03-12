@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NFT Validation</title>
+  <link rel="stylesheet" href="/style.css">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://*.google.com https://discord.com; img-src 'self' https://discord.com https://via.placeholder.com https://jmqwuaybvruzxddsppdh.supabase.co; frame-src 'self' http://localhost:3008 https://www.youtube.com;">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
+  <style>
+    .nft-card, .validation-card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; display: flex; flex-direction: column; align-items: center; }
+    .nft-image { max-width: 150px; max-height: 150px; margin-top: 10px; border-radius: 5px; }
+    button { margin: 5px; padding: 5px 10px; cursor: pointer; }
+    input { margin: 5px; padding: 5px; }
+    .validation-form { border: 1px dashed #ccc; padding: 10px; }
+    #submit-validation-btn { display: none; }
+    .help-text { font-size: 0.9em; color: #666; margin-top: -5px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <div id="login-form">
+    <h2>Login to NFT Validation</h2>
+    <input type="email" id="email" placeholder="Email" autocomplete="email"><br>
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password"><br>
+    <button id="login-btn">Login</button>
+    <p>Belum punya akun? <a href="#" id="show-register-link">Create Account</a></p>
+  </div>
+  <div id="register-form" style="display: none;">
+    <h2>Create Account</h2>
+    <input type="email" id="reg-email" placeholder="Email" autocomplete="email"><br>
+    <input type="password" id="reg-password" placeholder="Password" autocomplete="new-password"><br>
+    <button id="register-btn">Register</button>
+    <p>Sudah punya akun? <a href="#" id="show-login-link">Login</a></p>
+  </div>
+  <div id="pool" style="display: none;">
+    <h1>NFT Validation</h1>
+    <nav>
+      <button id="logout-btn">Logout</button>
+    </nav>
+    <h2>Pending Projects</h2>
+    <div id="pending-validations"></div>
+    <h2>Validated NFTs</h2>
+    <div id="validations"></div>
+    <h2>Submit New Validation</h2>
+    <div class="validation-form">
+      <input type="number" id="nft-id" placeholder="NFT ID" min="1"><br>
+      <input type="number" id="project-value" placeholder="Project Value (Rp)" min="100000"><br>
+      <input type="text" id="transaction-proof" placeholder="Transaction Proof Link (e.g., https://etherscan.io/tx/...)"><br>
+      <p class="help-text">Provide a public link to your transaction proof, such as a blockchain explorer (e.g., Etherscan, Polygonscan), a marketplace transaction (e.g., OpenSea), or a publicly accessible file (e.g., Google Drive link).</p>
+      <button id="submit-validation-btn">Submit Validation</button>
+    </div>
+    <h2>Admin Actions</h2>
+    <button id="confirm-validation-btn">Confirm Validation</button>
+    <button id="reject-validation-btn">Reject Validation</button>
+    <button id="revalidate-btn">Revalidate Project</button>
+    <button id="convert-nft-btn">Convert Valid NFT</button>
+    <div id="action-result"></div>
+  </div>
+  <script src="/script.js"></script>
+</body>
+</html>
