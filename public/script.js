@@ -378,4 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reject-validation-btn')?.addEventListener('click', rejectValidation);
   document.getElementById('revalidate-btn')?.addEventListener('click', revalidateProject);
   document.getElementById('convert-nft-btn')?.addEventListener('click', convertValidNft);
+  // Logika untuk tombol Back (dipisahkan)
+  const backButton = document.getElementById('back-to-mastermind');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      window.location.href = 'https://nft-mastermind.vercel.app';
+    });
+  }
+
 });
