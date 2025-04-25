@@ -1,6 +1,6 @@
 console.log('script.js loaded');
 
-const supabase = window.supabase.createClient('https://jmqwuaybvruzxddsppdh.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcXd1YXlidnJ1enhkZHNwcGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA0MTUxNzEsImV4cCI6MjA1NTk5MTE3MX0.ldNdOrsb4BWyFRwZUqIFEbmU0SgzJxiF_Z7eGZPKZJg');
+const supabase = window.supabase.createClient('https://oqquvpjikdbjlagdlbhp.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xcXV2cGppa2RiamxhZ2RsYmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5NTE4MDgsImV4cCI6MjA2MDUyNzgwOH0.ec28Q9VqiW2FomXESxVkiYswtWe6kJS-Vpc7W_tMsuU');
 let token = null;
 
 async function login(email, password) {
@@ -126,14 +126,10 @@ async function loadValidations() {
 
 async function submitValidation() {
   try {
-    // Bersihkan pesan error sebelumnya
     document.getElementById('action-result').innerHTML = '';
-
     const nftId = document.getElementById('nft-id').value;
     const projectValue = document.getElementById('project-value').value;
     const transactionProof = document.getElementById('transaction-proof').value;
-
-    // Validasi input
     if (!nftId || isNaN(nftId) || parseInt(nftId) <= 0) {
       throw new Error('Please enter a valid NFT ID');
     }
@@ -143,13 +139,10 @@ async function submitValidation() {
     if (!transactionProof) {
       throw new Error('Please enter a transaction proof link');
     }
-
-    // Validasi URL sederhana
     const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*)$/i;
     if (!urlPattern.test(transactionProof)) {
       throw new Error('Please enter a valid URL for the transaction proof (e.g., https://etherscan.io/tx/...)');
     }
-
     console.log('Submitting validation for NFT:', nftId);
     const res = await fetch('/submit-validation', {
       method: 'POST',
@@ -217,14 +210,10 @@ async function rejectValidation() {
 
 async function revalidateProject() {
   try {
-    // Bersihkan pesan error sebelumnya
     document.getElementById('action-result').innerHTML = '';
-
     const validationId = prompt('Enter Validation ID to revalidate:');
     const newValidatorId = prompt('Enter New Validator ID:');
     const transactionProof = prompt('Enter Transaction Proof Link:');
-
-    // Validasi input
     if (!validationId || isNaN(validationId) || parseInt(validationId) <= 0) {
       throw new Error('Please enter a valid Validation ID');
     }
@@ -234,23 +223,17 @@ async function revalidateProject() {
     if (!transactionProof) {
       throw new Error('Please enter a transaction proof link');
     }
-
-    // Validasi URL sederhana
     const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*)$/i;
     if (!urlPattern.test(transactionProof)) {
       throw new Error('Please enter a valid URL for the transaction proof (e.g., https://etherscan.io/tx/...)');
     }
-
     console.log('Revalidating project for ID:', validationId);
-    
-    // tambahkan console.log di sini :
     console.log('Sending revalidation data:', {
       validation_id: parseInt(validationId),
       new_validator_id: newValidatorId,
       transaction_proof: transactionProof
     });
-
-    const res = await fetch('/revalidate-project', { // <- sebelumnya kode diletakan di sini
+    const res = await fetch('/revalidate-project', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({
@@ -304,30 +287,23 @@ async function checkTopDeveloperStatus() {
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
     const { topDevelopers } = await res.json();
     console.log('Top developers:', topDevelopers);
-
-    // Ambil user ID dari token
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     if (userError || !user) throw new Error('Failed to fetch user data');
-
-    // Ambil semua NFT yang dimiliki oleh vendor_id tertentu
     const { data: nfts, error: nftError } = await supabase
       .from('nfts')
       .select('vendor_id')
       .eq('vendor_id', user.id);
     if (nftError) throw nftError;
-
-    // Periksa apakah salah satu vendor_id dari NFT pengguna ada di top developers
     const userVendorIds = nfts.map(nft => nft.vendor_id);
     const isTopDeveloper = userVendorIds.some(vendorId => 
       topDevelopers.some(dev => dev.id === vendorId)
     );
-
     const submitBtn = document.getElementById('submit-validation-btn');
     if (isTopDeveloper) {
       submitBtn.style.display = 'block';
     } else {
       submitBtn.style.display = 'none';
-      if (document.getElementById('action-result').innerHTML.includes('Error')) {
+      if (!document.getElementById('action-result').innerHTML.includes('Error')) {
         document.getElementById('action-result').innerHTML = '<p>You must be a top developer to submit validations.</p>';
       }
     }
@@ -378,12 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('reject-validation-btn')?.addEventListener('click', rejectValidation);
   document.getElementById('revalidate-btn')?.addEventListener('click', revalidateProject);
   document.getElementById('convert-nft-btn')?.addEventListener('click', convertValidNft);
-  // Logika untuk tombol Back (dipisahkan)
   const backButton = document.getElementById('back-to-mastermind');
   if (backButton) {
     backButton.addEventListener('click', () => {
       window.location.href = 'https://nft-mastermind.vercel.app';
     });
   }
-
 });
